@@ -1,0 +1,69 @@
+circles_path = 'C:\Users\Josias Moukpe\Desktop\MCS1_images\circles.jpg';
+
+%laoding images
+Img1 = imread(circles_path);
+
+imshow(Img1)
+d1 = imdistline;
+
+gsImg1 = rgb2gray(Img1);
+bImg1 = imbinarize(gsImg1);
+%sImg1 = edge(gsImg1,'sobel');
+cImg1 = edge(gsImg1,'canny');
+%imshow(gsImg1)
+
+[centers,radii] = imfindcircles(cImg1, [20 100],'ObjectPolarity','dark', ...
+    'Sensitivity',.92)
+
+
+num = length(centers)
+
+imshow(Img1)
+title([num2str(num),' Circle(s)'])
+h = viscircles(centers,radii, 'Color', 'g');
+
+
+% call hsvMask function to get the mask and the filtered image
+%[BW,maskedImage] = hsvMask(Img1, .9, .2); %blue mask
+%[BW,maskedImage] = hsvMask(Img1, .1, .0); %red-orange mask
+%[BW,maskedImage] = hsvMask(Img1, 1., .9); %red mask
+%[BW,maskedImage] = hsvMask(Img1, .4, .11); %yellow mask
+%[BW,maskedImage] = hsvMask(Img1, .965, .188); %black mask
+
+
+%{
+subplot(1,3,1);imshow(Img1);title('Original Image');
+h = viscircles(centers,radii);
+subplot(1,3,2);imshow(maskedImage);title('MaskedImage');
+subplot(1,3,3);imshow(BW);title('Mask');
+%}
+
+%imshow(Img1)
+%h = viscircles(centers,radii);
+
+
+
+
+
+function [BW,maskedRGBImage] = hsvMask(RGB, minH, maxH) 
+% Convert RGB image to HSV image
+I = rgb2hsv(RGB);
+% Define thresholds for 'Hue'. Modify these values to filter out different range of colors.
+channel1Min = minH;
+channel1Max = maxH;
+% Define thresholds for 'Saturation'
+channel2Min = 0.000;
+channel2Max = 1.000;
+% Define thresholds for 'Value'
+channel3Min = 0.000;
+channel3Max = 1.000;
+
+% Create mask based on chosen histogram thresholds
+BW = ( (I(:,:,1) >= channel1Min) | (I(:,:,1) <= channel1Max) ) & ...
+    (I(:,:,2) >= channel2Min ) & (I(:,:,2) <= channel2Max) & ...
+    (I(:,:,3) >= channel3Min ) & (I(:,:,3) <= channel3Max);
+% Initialize output masked image based on input image.
+maskedRGBImage = RGB;
+% Set background pixels where BW is false to zero.
+maskedRGBImage(repmat(~BW,[1 1 3])) = 0;
+end
