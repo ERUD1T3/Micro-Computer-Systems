@@ -29,7 +29,7 @@ subplot(3,3,4),imshow(I3)
 
 % create binary version of the image
 bw = imbinarize(I3);
-bw = bwareaopen(bw,50);
+bw = bwareaopen(bw,45);
 subplot(3,3,5),imshow(bw)
 
 
@@ -46,7 +46,7 @@ cc.NumObjects
 
 % view the rice grain labelled 50
 grain = false(size(bw));
-grain(cc.PixelIdxList{50}) = true;
+grain(cc.PixelIdxList{45}) = true;
 subplot(3,3,6),imshow(grain)
 
 

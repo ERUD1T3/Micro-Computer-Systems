@@ -12,8 +12,13 @@ Imgs = {imread(circles_path), imread(redcirc_path), imread(penggray_path), imrea
 dIm = im2double(Imgs{2})
 
 % apply Weiner Filter Deblurring
-noise_var = 0.0001;
+noise_var = 0.001;
 estimated_nsr = noise_var / var(dIm(:));
+
+LEN = 21;
+THETA = 11;
+PSF = fspecial('motion', LEN, THETA);
+
 wnr3 = deconvwnr(Imgs{2}, PSF, estimated_nsr);
 figure, imshow(wnr3)
 title('Restoration of Blurred, Noisy Image Using Estimated NSR');
